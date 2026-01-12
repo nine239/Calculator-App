@@ -130,9 +130,50 @@ extension ViewController{
         }
         
         if let last = tokenize(expr: current).last, Double(last) == nil{
-            var updated = current
-            updated.removeLast()
-            return updated + op
+            if last == "-" && op == "-"{
+                if current.count == 1{
+                    return "0+"
+                }
+                else{
+                    let start = current.index(current.startIndex, offsetBy: 0)
+                    let end = current.index(current.startIndex, offsetBy: current.count-1)
+                    
+                    let tempString = String(current[start..<end])
+                    return tempString + "+"
+                }
+            }
+            else if (last == "+" && op == "-") || (last == "-" && op == "+"){
+                if current.count == 1{
+                    return "-"
+                }
+                else{
+                    let start = current.index(current.startIndex, offsetBy: 0)
+                    let end = current.index(current.startIndex, offsetBy: current.count-1)
+                    
+                    let tempString = String(current[start..<end])
+                    return tempString + "-"
+                }
+            }
+            else if "+-".contains(last) && "x÷".contains(op){
+                var tempString = current
+                tempString.removeLast()
+                return tempString + op
+            }
+            else{
+                if "x÷".contains(last){
+                    if op == "+"{
+                        return current
+                    }
+                    else if op == "-"{
+                        return current + op
+                    }
+                    else{
+                        var tempString = current
+                        tempString.removeLast()
+                        return tempString + op
+                    }
+                }
+            }
         }
         return current + op
     }
@@ -180,10 +221,21 @@ extension ViewController{
         if current.isEmpty{
             return "0."
         }
-        if let last = tokens.last, Double(last) == nil{
+        guard let last = tokens.last else {
+            return "0."
+        }
+        
+        if Double(last) == nil{
             return current + "0."
         }
-        return current + "."
+        else{
+            if last.contains("."){
+                return current
+            }
+            else{
+                return current + "."
+            }
+        }
     }
     
     // MARK: Handle equal
