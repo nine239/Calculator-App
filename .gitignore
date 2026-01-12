@@ -1,0 +1,3 @@
+# Xcode user-specific files (NEVER COMMIT)
+xcuserdata/
+*.xcbkptlist
